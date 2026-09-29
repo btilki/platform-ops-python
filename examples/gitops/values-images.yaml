@@ -1,0 +1,10 @@
+# Image digest pins — updated by promotion-bot.
+# No floating tags. Kyverno require-digest policy enforces digest-only images.
+
+images:
+  frontend:
+    repository: europe-west1-docker.pkg.dev/boutique-gke/boutique/frontend
+    digest: sha256:50ca57c513de1ef22a97b6ef76989a73878d4a3873f85b5314bfc207853d5475
+  checkoutservice:
+    repository: europe-west1-docker.pkg.dev/boutique-gke/boutique/checkoutservice
+    digest: sha256:403f4056479bcf2d36a865bf037ba2de0f84a60408519cee1b80e705e99f622a

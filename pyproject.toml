@@ -1,0 +1,92 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "platform-ops-python"
+version = "0.1.0"
+description = "Production-style Python tools for GitOps promotion, SLO-as-code, and Kubernetes tenant provisioning."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+authors = [{ name = "Birol Tilki", email = "btilki@gmail.com" }]
+keywords = ["gitops", "sre", "kubernetes", "platform", "devops"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Systems Administration",
+]
+dependencies = [
+  "httpx>=0.28",
+  "pydantic-settings>=2.7",
+  "pydantic>=2.10",
+  "ruamel.yaml>=0.18",
+  "structlog>=24.4",
+  "tenacity>=9.0",
+  "typer>=0.16",
+]
+
+[project.urls]
+Homepage = "https://github.com/btilki/platform-ops-python"
+Playbook = "https://github.com/btilki/devops-engineering-playbook"
+
+[project.scripts]
+promotion-bot = "platform_ops.promotion.cli:app"
+slo-kit = "platform_ops.slo.cli:app"
+platform-tenant = "platform_ops.tenant.cli:app"
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.14",
+  "pytest-cov>=6.0",
+  "pytest>=8.3",
+  "respx>=0.22",
+  "ruff>=0.9",
+]
+
+[dependency-groups]
+dev = [
+  "mypy>=1.14",
+  "pytest-cov>=6.0",
+  "pytest>=8.3",
+  "respx>=0.22",
+  "ruff>=0.9",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/platform_ops"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-q", "--cov=platform_ops", "--cov-report=term-missing", "--cov-fail-under=80"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["platform_ops"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["platform_ops"]
+mypy_path = "src"
+warn_unused_ignores = true
+show_error_codes = true

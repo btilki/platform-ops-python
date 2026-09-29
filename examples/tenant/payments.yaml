@@ -1,0 +1,15 @@
+apiVersion: platform.biroltilki.dev/v1
+kind: Tenant
+metadata:
+  name: payments
+spec:
+  team: checkout
+  environment: staging
+  quota:
+    cpu: "4"
+    memory: 8Gi
+    pods: "40"
+  argocd:
+    repoURL: https://github.com/btilki/boutique-eks-gitops.git
+    destServer: https://kubernetes.default.svc
+    sourcePath: gitops/apps/payments

@@ -1,0 +1,21 @@
+# Maps to boutique-gke-sre SLO catalog: browse 99.9%, checkout 99.95%.
+# PromQL selectors are placeholders for a Prometheus-backed cluster.
+
+slos:
+  - name: browse-availability
+    service: boutique-frontend
+    objective: 0.999
+    window: 30d
+    owner: sre
+    sli:
+      good: http_requests_total{job="frontend",code!~"5.."}
+      total: http_requests_total{job="frontend"}
+
+  - name: checkout-availability
+    service: boutique-checkout
+    objective: 0.9995
+    window: 30d
+    owner: sre
+    sli:
+      good: checkout_attempts_total{result="success"}
+      total: checkout_attempts_total
