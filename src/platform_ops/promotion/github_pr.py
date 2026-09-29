@@ -107,9 +107,7 @@ class GitHubOpener:
         if response.status_code in {429, 500, 502, 503, 504}:
             response.raise_for_status()
         if response.is_error:
-            raise IntegrationError(
-                f"GitHub {method} {url} failed: {response.status_code} {response.text}"
-            )
+            raise IntegrationError(f"GitHub {method} {url} failed: {response.status_code} {response.text}")
         return response
 
     def _git_sha(self, repo: str, ref: str) -> str:
@@ -133,9 +131,7 @@ class GitHubOpener:
             raise IntegrationError(f"could not read {path} on {branch}")
         return sha
 
-    def _put_file(
-        self, repo: str, path: str, content: str, branch: str, message: str, sha: str
-    ) -> None:
+    def _put_file(self, repo: str, path: str, content: str, branch: str, message: str, sha: str) -> None:
         encoded = base64.b64encode(content.encode("utf-8")).decode("ascii")
         self._request(
             "PUT",

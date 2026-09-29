@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 from pydantic import ValidationError as PydanticValidationError
@@ -43,7 +43,7 @@ def load_tenant(path: Path) -> TenantDocument:
 @app.command("apply")
 def apply_cmd(
     config: Annotated[Path, typer.Option(help="Tenant YAML (apiVersion/kind/metadata/spec)")],
-    out: Annotated[Optional[Path], typer.Option(help="Directory for rendered manifests")] = None,
+    out: Annotated[Path | None, typer.Option(help="Directory for rendered manifests")] = None,
     write: Annotated[bool, typer.Option("--write", help="Write files instead of printing")] = False,
 ) -> None:
     log = get_logger("platform-tenant")

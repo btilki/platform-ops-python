@@ -16,9 +16,7 @@ def test_open_pr_happy_path() -> None:
     respx.get(f"{api}/repos/acme/gitops/contents/gitops/values.yaml").mock(
         return_value=httpx.Response(200, json={"sha": "file-sha"})
     )
-    respx.put(f"{api}/repos/acme/gitops/contents/gitops/values.yaml").mock(
-        return_value=httpx.Response(200, json={})
-    )
+    respx.put(f"{api}/repos/acme/gitops/contents/gitops/values.yaml").mock(return_value=httpx.Response(200, json={}))
     respx.post(f"{api}/repos/acme/gitops/pulls").mock(
         return_value=httpx.Response(201, json={"html_url": "https://github.com/acme/gitops/pull/42"})
     )

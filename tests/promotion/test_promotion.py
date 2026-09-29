@@ -6,11 +6,11 @@ import pytest
 from typer.testing import CliRunner
 
 from platform_ops.exceptions import PolicyError, ValidationError
+from platform_ops.promotion.cli import app
 from platform_ops.promotion.digest import assert_not_latest, normalize_digest
 from platform_ops.promotion.manifests import load_manifest, render_manifest, update_service_digest
 from platform_ops.promotion.policy import assert_adjacent_promotion
 from platform_ops.promotion.scan import ScanPolicy, assert_scan_clean, findings_from_trivy
-from platform_ops.promotion.cli import app
 
 FIXTURE = Path(__file__).resolve().parents[2] / "examples" / "gitops" / "values-images.yaml"
 RUNNER = CliRunner()
@@ -60,15 +60,7 @@ def test_unknown_service(tmp_path: Path) -> None:
 
 def test_scan_blocks_fixable_high() -> None:
     findings = findings_from_trivy(
-        {
-            "Results": [
-                {
-                    "Vulnerabilities": [
-                        {"VulnerabilityID": "CVE-1", "Severity": "HIGH", "FixedVersion": "1.0"}
-                    ]
-                }
-            ]
-        }
+        {"Results": [{"Vulnerabilities": [{"VulnerabilityID": "CVE-1", "Severity": "HIGH", "FixedVersion": "1.0"}]}]}
     )
     with pytest.raises(PolicyError, match="CVE-1"):
         assert_scan_clean(findings, ScanPolicy())

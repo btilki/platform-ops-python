@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 from uuid import uuid4
 
 import typer
@@ -85,7 +85,7 @@ def promote(
     to_env: Annotated[str, typer.Option("--to-env", help="Target environment")] = "prod",
     image: Annotated[str, typer.Option(help="Repository used for cosign verify")] = "",
     trivy_json: Annotated[
-        Optional[Path],
+        Path | None,
         typer.Option(help="Optional Trivy JSON; HIGH/CRITICAL with a fix version block promotion"),
     ] = None,
     require_signature: Annotated[bool, typer.Option(help="Run cosign verify before mutating YAML")] = False,

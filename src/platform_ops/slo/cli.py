@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 
@@ -28,7 +28,7 @@ def _main(log_level: LogLevelOption = "info") -> None:
 @app.command("compile")
 def compile_cmd(
     spec: Annotated[Path, typer.Option(help="YAML document with slos: []")],
-    out: Annotated[Optional[Path], typer.Option(help="Write PrometheusRule YAML here")] = None,
+    out: Annotated[Path | None, typer.Option(help="Write PrometheusRule YAML here")] = None,
     stdout: Annotated[bool, typer.Option("--stdout", help="Print generated YAML")] = False,
 ) -> None:
     log = get_logger("slo-kit")
