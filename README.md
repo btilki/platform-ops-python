@@ -2,7 +2,7 @@
 
 Three small Python command-line tools for GitOps, SRE, and platform work.
 
-They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The [Boutique platforms](https://github.com/btilki/devops-engineering-playbook) already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository is the missing piece: **code** that keeps those platforms consistent.
+They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The Boutique platforms already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository is the missing piece: **code** that keeps those platforms consistent.
 
 Author: [Birol Tilki](https://www.linkedin.com/in/birol-tilki-48731326/)
 

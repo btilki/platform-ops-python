@@ -32,7 +32,6 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/btilki/platform-ops-python"
-Playbook = "https://github.com/btilki/devops-engineering-playbook"
 
 [project.scripts]
 promotion-bot = "platform_ops.promotion.cli:app"

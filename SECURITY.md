@@ -10,7 +10,7 @@ If you discover a security issue, please report it responsibly. Do not open publ
 
 - **Dry-run by default** — `--write` and `--open-pr` are explicit
 - **No cluster apply** — Git is the deploy authority; Argo CD reconciles
-- **No secrets in Git** — tokens only via environment (`GITHUB_TOKEN`, `PROMOTION_GITHUB_TOKEN`)
+- **No secrets in Git** — tokens only via environment (`PROMOTION_GITHUB_TOKEN`)
 - **Digest-only images** — `:latest` is a validation error
 - **Least surprise YAML** — `ruamel.yaml` round-trip so GitOps diffs stay reviewable
 

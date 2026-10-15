@@ -59,7 +59,7 @@ class GitHubOpener:
         client: httpx.Client | None = None,
     ) -> None:
         if not token:
-            raise IntegrationError("GITHUB_TOKEN is required for --open-pr")
+            raise IntegrationError("PROMOTION_GITHUB_TOKEN is required for --open-pr")
         self._client = client or httpx.Client(
             base_url=api_url.rstrip("/"),
             headers={

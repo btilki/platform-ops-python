@@ -90,7 +90,7 @@ def promote(
     ] = None,
     require_signature: Annotated[bool, typer.Option(help="Run cosign verify before mutating YAML")] = False,
     write: Annotated[bool, typer.Option("--write", help="Write the digest into the local manifest")] = False,
-    open_pr: Annotated[bool, typer.Option("--open-pr", help="Open a GitHub PR (requires GITHUB_TOKEN)")] = False,
+    open_pr: Annotated[bool, typer.Option("--open-pr", help="Open a GitHub PR (requires PROMOTION_GITHUB_TOKEN)")] = False,
     repo: Annotated[str, typer.Option(help="owner/name for --open-pr")] = "",
     path_in_repo: Annotated[str, typer.Option(help="Path of the manifest inside the Git repo")] = "",
 ) -> None:
