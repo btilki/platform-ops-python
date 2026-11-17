@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Portfolio infographic v2 (Git PR → Argo CD, SAFE & RELIABLE footer); refresh `assets/images/README.md`
 - Rename README section to **Portfolio overview**; map infographic pillars to real CLIs in `assets/images/README.md`
 - Replace CLI infographic art; document accurate capabilities vs poster copy
 - Link boutique-gke-sre `manifest-digest-pr` workflow; document `--path-in-repo` and promotion exit codes

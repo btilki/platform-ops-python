@@ -2,18 +2,20 @@
 
 | File | What it shows |
 | --- | --- |
-| [platform-ops-python-cli-infographic.png](platform-ops-python-cli-infographic.png) | Portfolio poster: automation / observability / multi-environment pillars and EKS·AKS·GKE links |
+| [platform-ops-python-cli-infographic.png](platform-ops-python-cli-infographic.png) | Portfolio poster: Git PR → Argo CD, observability and multi-env pillars, EKS·AKS·GKE, safe-change footer |
 
-## Infographic layout (2026-11)
+## Infographic layout (2026-11, v2)
 
-- **Header:** `platform-ops-python` — “Python toolkit for platform operations, monitoring and automation”; pill **DevOps • SRE • Platform Engineering**; author signature.
-- **Automation column:** GitOps-style flow (config → PR → reconcile). **In this repo:** `promotion-bot` (digest pin, optional `--open-pr`), `platform-tenant render` (tenant YAML).
-- **Observability column:** SLO and alerting motif. **In this repo:** `slo-kit compile` (PrometheusRule YAML), `slo-kit report` (error-budget band). No dashboards or live Prometheus queries.
-- **Multi-environment column:** dev → staging → prod and **EKS**, **AKS**, **GKE** (Boutique sibling repos).
-- **Footer pipeline:** tests → build and scan → no critical issues → merge Git → Argo CD reconciles. **Not** `kubectl apply` from these CLIs.
+- **Header:** `platform-ops-python`, Python toolkit subtitle, pill **DevOps • SRE • Platform Engineering**, author signature.
+- **Automation:** configs → GitHub PR → **Git PR → Argo CD** → platform changes via GitOps. Maps to **`promotion-bot`** (digest pin, `--open-pr`) and **`platform-tenant render`** (tenant YAML to Git).
+- **Observability:** SLO-style monitor / analyze / improve motif. Maps to **`slo-kit compile`** (`PrometheusRule` YAML) and **`slo-kit report`** (error-budget band)—not live dashboards or Prometheus queries from this repo.
+- **Multi-environment:** dev → staging → prod; logos **EKS**, **AKS**, **GKE** (Boutique sibling repos); adjacent promotion path in code (`dev → staging → prod`).
+- **Footer (SAFE & RELIABLE):** run tests → build and scan → no critical issues → **Deploy** (end-to-end platform flow) → keep users happy. **Deploy here means merge GitOps and let Argo CD reconcile**—these CLIs do not deploy or `kubectl apply`.
 
-**Not implemented in this repository:** cluster sync from the CLIs, runtime dashboards, package assignment managers, or deploy actions initiated by these commands.
+**Outside these CLIs:** Argo CD API calls, `kubectl apply`, and cluster sync driven by Python.
 
-The root [README](../../README.md) is the source of truth: three CLIs (`promotion-bot`, `slo-kit`, `platform-tenant`), dry-run by default, **no** `kubectl apply`. Package maturity is **Alpha** (`pyproject.toml`, README badge).
+The root [README](../../README.md) has commands, flags, exit codes, and examples.
 
 Referenced from the root README under **Portfolio overview**.
+
+**Art check:** If the Automation “Important” callout still reads **configuraations**, fix the spelling in your design file and re-export.

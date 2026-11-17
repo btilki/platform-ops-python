@@ -40,7 +40,7 @@ Similar tools already exist (Argo CD Image Updater, Renovate, Sloth, Crossplane)
 
 ## Portfolio overview
 
-The infographic below is **positioning only** (high-level pillars and Boutique cloud links). It does not deploy or sync clusters. Behaviour and commands for the three CLIs are in sections 1–3, [Non-goals](#non-goals), and [docs](docs).
+The infographic summarizes the three CLIs and GitOps → Argo CD flow. It does not run `kubectl apply` or call Argo CD from Python. Commands and behavior are in sections 1–3, [Non-goals](#non-goals), and [docs](docs).
 
 ![Platform Ops Python — portfolio infographic](assets/images/platform-ops-python-cli-infographic.png)
 
