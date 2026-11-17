@@ -7,9 +7,9 @@ make sync
 make validate
 ```
 
-`make validate` is ruff + mypy --strict + pytest (coverage gate 80%).
+`make validate` is ruff check, ruff format --check, mypy --strict, and pytest (coverage gate 80%).
 
-Optional: `pre-commit install` after `make sync`. Hook revisions are in `.pre-commit-config.yaml` and should stay aligned with the Ruff pin in `pyproject.toml`.
+Optional: `pre-commit install` after `make sync` (Ruff, mypy, gitleaks). Hook revisions are in `.pre-commit-config.yaml`; keep the Ruff hook aligned with the pin in `pyproject.toml`.
 
 ## Rules
 

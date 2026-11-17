@@ -18,7 +18,7 @@ from platform_ops.tenant.render import render_tenant
 app = typer.Typer(
     add_completion=False,
     no_args_is_help=True,
-    help="Render a Kubernetes tenant (namespace, quota, NetworkPolicy, Argo CD AppProject).",
+    help="Render a Kubernetes tenant (namespace, quota, LimitRange, NetworkPolicy, Argo CD AppProject).",
 )
 
 

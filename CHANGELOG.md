@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Rename README section to **Portfolio overview**; map infographic pillars to real CLIs in `assets/images/README.md`
+- Replace CLI infographic art; document accurate capabilities vs poster copy
+- Link boutique-gke-sre `manifest-digest-pr` workflow; document `--path-in-repo` and promotion exit codes
+- README summary table includes LimitRange; `make validate` documents Ruff format check
+- ADR 0003 band label `sev2`; promotion runbook env vars; CONTRIBUTING gitleaks note
+
 ## 0.2.0 — 2026-11-17
 
 - Remove the deleted playbook link; keep EKS, AKS, and GKE references

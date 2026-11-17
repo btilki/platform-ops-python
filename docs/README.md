@@ -19,6 +19,8 @@ All three CLIs map `platform_ops.exceptions` types to stable exit codes (`src/pl
 | 1 | General error | Unexpected `PlatformOpsError` base case |
 | 2 | Validation | Bad flags, missing file, invalid YAML shape, invalid digest, `--require-signature` without `--image` |
 | 3 | Policy | Adjacent promotion refused, Trivy/cosign verify failed, reserved tenant name |
-| 4 | Integration | Missing `cosign`, cosign verify timeout, GitHub token for `--open-pr`, upstream API failure |
+| 4 | Integration | Missing `cosign`, cosign verify timeout, missing `PROMOTION_GITHUB_TOKEN` for `--open-pr`, upstream API failure |
+
+For `--open-pr` only: missing `--repo` / `PROMOTION_GITHUB_REPOSITORY` is exit **2** (validation), not 4.
 
 Start with the root [README](../README.md) for install and try-it commands.

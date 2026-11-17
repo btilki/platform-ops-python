@@ -2,19 +2,18 @@
 
 | File | What it shows |
 | --- | --- |
-| [platform-ops-python-cli-infographic.png](platform-ops-python-cli-infographic.png) | Portfolio overview: three pillars (automation / observability / multi-environment), EKS·AKS·GKE links, safe-change pipeline footer |
+| [platform-ops-python-cli-infographic.png](platform-ops-python-cli-infographic.png) | Portfolio poster: automation / observability / multi-environment pillars and EKS·AKS·GKE links |
 
 ## Infographic layout (2026-11)
 
 - **Header:** `platform-ops-python` — “Python toolkit for platform operations, monitoring and automation”; pill **DevOps • SRE • Platform Engineering**; author signature.
-- **Automation:** config read → update → GitHub PR → cluster sync motif; bullets on digest updates, SLO-related automation, multi-environment support.
-- **Observability:** SLO track → alert → analyze → improve; Prometheus-oriented bullets.
-- **Multi-environment:** dev → staging → production → cloud (K8s); **EKS**, **AKS**, **GKE** logos.
-- **Footer pipeline:** run tests → build and scan → no critical issues → deploy → keep users happy.
-- **Repo link:** `github.com/btilki/platform-ops-python`.
+- **Automation column:** GitOps-style flow (config → PR → reconcile). **In this repo:** `promotion-bot` (digest pin, optional `--open-pr`), `platform-tenant render` (tenant YAML).
+- **Observability column:** SLO and alerting motif. **In this repo:** `slo-kit compile` (PrometheusRule YAML), `slo-kit report` (error-budget band). No dashboards or live Prometheus queries.
+- **Multi-environment column:** dev → staging → prod and **EKS**, **AKS**, **GKE** (Boutique sibling repos).
+- **Footer pipeline:** tests → build and scan → no critical issues → merge Git → Argo CD reconciles. **Not** `kubectl apply` from these CLIs.
 
-The root [README](../../README.md) is the source of truth for behaviour: three CLIs (`promotion-bot`, `slo-kit`, `platform-tenant`), dry-run by default, **no** `kubectl apply` and **no** deploy from these tools. Argo CD reconciles after Git changes.
+**Not implemented in this repository:** cluster sync from the CLIs, runtime dashboards, package assignment managers, or deploy actions initiated by these commands.
 
-Package maturity is **Alpha** (`pyproject.toml`, README badge). The infographic is positioning copy, not a maturity label.
+The root [README](../../README.md) is the source of truth: three CLIs (`promotion-bot`, `slo-kit`, `platform-tenant`), dry-run by default, **no** `kubectl apply`. Package maturity is **Alpha** (`pyproject.toml`, README badge).
 
-Referenced from the root README under **Repository map and navigation**.
+Referenced from the root README under **Portfolio overview**.

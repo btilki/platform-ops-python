@@ -32,19 +32,19 @@ flowchart LR
 | --- | --- | --- | --- |
 | `promotion-bot` | DevOps | A GitOps values file and a `sha256:` digest | The same file with one digest updated. `:latest` is refused. |
 | `slo-kit` | SRE | A short SLO YAML, or a measured success ratio | Prometheus burn-rate alerts, or remaining error budget |
-| `platform-tenant` | Platform | A short tenant YAML | Namespace, quota, default-deny NetworkPolicy, Argo CD AppProject |
+| `platform-tenant` | Platform | A short tenant YAML | Namespace, ResourceQuota, LimitRange, default-deny NetworkPolicy, Argo CD AppProject |
 
 Similar tools already exist (Argo CD Image Updater, Renovate, Sloth, Crossplane). These three are smaller and explicit, so a reader can follow the code. Design notes and runbooks are in [docs](docs).
 
 ---
 
-## Repository map and navigation
+## Portfolio overview
 
-Use this map for the three CLIs, how they fit GitOps and SRE workflows, and where to read next in the repository.
+The infographic below is **positioning only** (high-level pillars and Boutique cloud links). It does not deploy or sync clusters. Behaviour and commands for the three CLIs are in sections 1–3, [Non-goals](#non-goals), and [docs](docs).
 
-![Platform Ops Python — CLI Infographic](assets/images/platform-ops-python-cli-infographic.png)
+![Platform Ops Python — portfolio infographic](assets/images/platform-ops-python-cli-infographic.png)
 
-Diagram catalog: [`assets/images/README.md`](assets/images/README.md).
+Diagram catalog and how each visual pillar maps to real commands: [`assets/images/README.md`](assets/images/README.md).
 
 ---
 
@@ -57,7 +57,7 @@ git clone https://github.com/btilki/platform-ops-python.git
 cd platform-ops-python
 make sync          # creates .venv and installs the three commands
 source .venv/bin/activate
-make validate      # ruff, mypy, pytest
+make validate      # ruff check, ruff format --check, mypy, pytest
 make demo          # runs all three tools in dry-run
 ```
 
@@ -88,13 +88,13 @@ docker run --rm -v "$PWD:/work" -w /work platform-ops-python:local \
   --from-env staging --to-env prod
 ```
 
-For `--open-pr`, set `PROMOTION_GITHUB_TOKEN`, and either pass `--repo owner/name` or set `PROMOTION_GITHUB_REPOSITORY`. Optional: `PROMOTION_GITHUB_API_URL` (defaults to `https://api.github.com`). See [`.env.example`](.env.example).
+For `--open-pr`, set `PROMOTION_GITHUB_TOKEN`, and either pass `--repo owner/name` or set `PROMOTION_GITHUB_REPOSITORY`. Optional: `PROMOTION_GITHUB_API_URL` (defaults to `https://api.github.com`). Use `--path-in-repo` when the manifest path in Git differs from the local file path. See [`.env.example`](.env.example).
 
 ---
 
 ## 1. promotion-bot — change one image digest in Git
 
-**Problem.** In [boutique-gke-sre](https://github.com/btilki/boutique-gke-sre), images are pinned by digest (`sha256:...`), not by a floating tag such as `:latest`. A GitHub Actions workflow currently does that pin with a short inline Python snippet. This tool is that snippet as a real program: CI may open a pull request; Argo CD is still the only thing that deploys.
+**Problem.** In [boutique-gke-sre](https://github.com/btilki/boutique-gke-sre), images are pinned by digest (`sha256:...`), not by a floating tag such as `:latest`. The [`manifest-digest-pr`](https://github.com/btilki/boutique-gke-sre/blob/main/.github/workflows/manifest-digest-pr.yml) workflow updates `values-images.yaml` with an inline Python block today. `promotion-bot` is that logic as a maintainable CLI (digest rules, Trivy gate, optional cosign, optional `--open-pr`). Argo CD is still the only deployer.
 
 **Input.** [`examples/gitops/values-images.yaml`](examples/gitops/values-images.yaml):
 
@@ -116,7 +116,7 @@ images:
 
 Optional `--require-signature` runs `cosign verify <image>@<digest>`. You need `cosign` on `PATH`, `--image` set to the image repository (not the digest alone), and whatever trust material your registry expects (keys, Fulcio/Rekor, or policy files on the cosign default path). Omitting `--image` with `--require-signature` is exit code 2. A verify failure is exit code 3; a missing `cosign` binary or verify timeout is exit code 4.
 
-Optional `--open-pr` opens a GitHub pull request with `PROMOTION_GITHUB_TOKEN` (or a GitHub App installation token) and `--repo owner/name` or `PROMOTION_GITHUB_REPOSITORY`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
+Optional `--open-pr` opens a GitHub pull request with `PROMOTION_GITHUB_TOKEN` (or a GitHub App installation token), `--repo owner/name` or `PROMOTION_GITHUB_REPOSITORY`, and optional `PROMOTION_GITHUB_API_URL`. When the manifest path inside the Git repo differs from the local path (for example Docker `-w /work`), pass `--path-in-repo gitops/apps/boutique/values-images.yaml`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
 
 **Try it.**
 
@@ -227,7 +227,7 @@ A useful reading order, one tool at a time:
 4. Open the helper it calls (`digest.py`, `budget.py`, or `render.py`).
 5. Open the test. The test is the specification.
 
-`make validate` runs Ruff, mypy in strict mode, and pytest. Coverage is gated at 80%.
+`make validate` runs Ruff (`check` and `format --check`), mypy in strict mode, and pytest. Coverage is gated at 80%.
 
 ---
 
@@ -242,4 +242,4 @@ A useful reading order, one tool at a time:
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE). Security reporting: [SECURITY.md](SECURITY.md).
+Apache License 2.0. See [LICENSE](LICENSE). Security reporting: [SECURITY.md](SECURITY.md). Contributing: [CONTRIBUTING.md](CONTRIBUTING.md).
