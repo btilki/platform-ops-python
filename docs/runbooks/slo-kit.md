@@ -8,7 +8,7 @@ Compile fails or budget band looks wrong.
 
 1. `objective` in `(0, 1)` — `1.0` is rejected (zero error budget).
 2. `sli.good` / `sli.total` must be instant-vector selectors; the compiler wraps `rate()[window]`.
-3. `report`: remaining % uses `(1 - sli) / (1 - objective)`.
+3. `report`: consumed = `(1 - sli) / (1 - objective)`; remaining % = `(1 - consumed) × 100`.
 
 ## Rollback
 

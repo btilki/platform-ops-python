@@ -35,7 +35,7 @@ def test_reserved_names() -> None:
 
 
 def test_cli_dry_run(tmp_path: Path) -> None:
-    result = RUNNER.invoke(app, ["apply", "--config", str(EXAMPLE), "--out", str(tmp_path)])
+    result = RUNNER.invoke(app, ["render", "--config", str(EXAMPLE), "--out", str(tmp_path)])
     assert result.exit_code == 0, result.output
     assert "kind: Namespace" in result.output
     assert list(tmp_path.iterdir()) == []
@@ -44,7 +44,7 @@ def test_cli_dry_run(tmp_path: Path) -> None:
 def test_cli_write(tmp_path: Path) -> None:
     result = RUNNER.invoke(
         app,
-        ["apply", "--config", str(EXAMPLE), "--out", str(tmp_path), "--write"],
+        ["render", "--config", str(EXAMPLE), "--out", str(tmp_path), "--write"],
     )
     assert result.exit_code == 0, result.output
     written = tmp_path / "tenant.yaml"
@@ -58,7 +58,7 @@ def test_cli_rejects_reserved(tmp_path: Path) -> None:
         EXAMPLE.read_text(encoding="utf-8").replace("name: payments", "name: kube-system"),
         encoding="utf-8",
     )
-    result = RUNNER.invoke(app, ["apply", "--config", str(path)])
+    result = RUNNER.invoke(app, ["render", "--config", str(path)])
     assert result.exit_code == 3
     assert "reserved" in result.output.lower()
 

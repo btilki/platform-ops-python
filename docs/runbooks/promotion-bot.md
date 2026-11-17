@@ -8,7 +8,7 @@ Promotion refused or PR not opened.
 
 1. Digest shape: must be `sha256:` + 64 hex. `:latest` is always an error.
 2. Path: only `dev→staging` or `staging→prod`.
-3. Trivy JSON: fixable HIGH/CRITICAL block the run. Allow-list is in `ScanPolicy.allow`.
+3. Trivy JSON: fixable HIGH/CRITICAL block the run. Allow-list is in `ScanPolicy.allow` (empty by default; the CLI does not expose a flag for it yet). Reproduce a block with `--trivy-json examples/gitops/trivy-blocked.json`.
 4. `--open-pr`: `PROMOTION_GITHUB_TOKEN` and `--repo owner/name`.
 5. YAML: `images.<service>.digest` must exist (Boutique Helm layout).
 

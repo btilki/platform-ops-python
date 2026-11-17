@@ -38,7 +38,7 @@ demo:
 		--to-env prod
 	$(VENV)/bin/slo-kit compile --spec examples/slo/boutique.yaml --stdout
 	$(VENV)/bin/slo-kit report --sli 0.9992 --objective 0.999
-	$(VENV)/bin/platform-tenant apply --config examples/tenant/payments.yaml
+	$(VENV)/bin/platform-tenant render --config examples/tenant/payments.yaml
 
 clean:
 	rm -rf $(VENV) .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov dist build *.egg-info src/*.egg-info

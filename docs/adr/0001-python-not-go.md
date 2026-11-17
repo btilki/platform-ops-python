@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for this repository.
+Accepted.
 
 ## Context
 

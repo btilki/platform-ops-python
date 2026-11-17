@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "platform-ops-python"
 version = "0.1.0"
-description = "Production-style Python tools for GitOps promotion, SLO-as-code, and Kubernetes tenant provisioning."
+description = "Python CLIs for GitOps promotion, SLO-as-code, and Kubernetes tenant YAML rendering."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.12"

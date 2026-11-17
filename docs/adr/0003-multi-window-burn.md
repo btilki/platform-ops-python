@@ -10,8 +10,8 @@ Accepted.
 
 ## Decision
 
-`slo-kit` emits paired short/long windows from the SRE workbook (5m+1h, 30m+6h, 2h+1d, 6h+3d) with those multipliers. Error-budget bands match the Boutique policy: >50% normal, 25–50% cautious, <25% freeze, 0% SEV2.
+`slo-kit` emits paired short/long windows from the SRE workbook (5m+1h, 30m+6h, 2h+1d, 6h+3d) with those multipliers. Error-budget bands follow the Boutique policy thresholds as implemented: ≥50% normal, 25%–under 50% cautious, under 25% freeze, 0% SEV2.
 
 ## Consequences
 
-Generated `PrometheusRule` objects can replace hand-written alerts once Prometheus is the backend. Cloud Monitoring YAML in Boutique GKE stays as the live GCP path until then.
+Generated `PrometheusRule` objects target a Prometheus-backed path. Boutique GKE documents the same burn and budget policy with Cloud Monitoring YAML as the reference alert definitions.

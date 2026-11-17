@@ -40,8 +40,8 @@ def load_tenant(path: Path) -> TenantDocument:
     return tenant
 
 
-@app.command("apply")
-def apply_cmd(
+@app.command("render")
+def render_cmd(
     config: Annotated[Path, typer.Option(help="Tenant YAML (apiVersion/kind/metadata/spec)")],
     out: Annotated[Path | None, typer.Option(help="Directory for rendered manifests")] = None,
     write: Annotated[bool, typer.Option("--write", help="Write files instead of printing")] = False,

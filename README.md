@@ -2,17 +2,17 @@
 
 Three small Python command-line tools for GitOps, SRE, and platform work.
 
-They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The Boutique platforms already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository is the missing piece: **code** that keeps those platforms consistent.
+They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The Boutique platforms already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository adds the Python CLIs that encode the same GitOps, SLO, and tenant rules those platforms describe.
 
 Author: [Birol Tilki](https://www.linkedin.com/in/birol-tilki-48731326/)
 
-| | |
+| Aspect | Detail |
 | --- | --- |
-| **Language** | Python 3.12+ |
-| **Tools** | `promotion-bot`, `slo-kit`, `platform-tenant` |
-| **Default** | Dry-run. Nothing on disk changes unless you pass `--write` |
-| **Does not** | `kubectl apply`, create cloud networks, or replace Argo CD |
-| **Check** | `make sync` → `make validate` → `make demo` |
+| Language | Python 3.12+ |
+| Tools | `promotion-bot`, `slo-kit`, `platform-tenant` |
+| Default | Dry-run. Nothing on disk changes unless you pass `--write` |
+| Does not | `kubectl apply`, create cloud networks, or replace Argo CD |
+| Check | `make sync` → `make validate` → `make demo` |
 
 ```mermaid
 flowchart LR
@@ -29,7 +29,15 @@ flowchart LR
 | `slo-kit` | SRE | A short SLO YAML, or a measured success ratio | Prometheus burn-rate alerts, or remaining error budget |
 | `platform-tenant` | Platform | A short tenant YAML | Namespace, quota, default-deny NetworkPolicy, Argo CD AppProject |
 
-Similar tools already exist (Argo CD Image Updater, Renovate, Sloth, Crossplane). These three are smaller and explicit, so a reader can follow the code. Design notes are in [docs/adr](docs/adr).
+Similar tools already exist (Argo CD Image Updater, Renovate, Sloth, Crossplane). These three are smaller and explicit, so a reader can follow the code. Design notes and runbooks are in [docs](docs).
+
+---
+
+## Repository map and navigation
+
+Use this map for the three CLIs, how they fit GitOps and SRE workflows, and where to read next in the repository.
+
+![Platform Ops Python — CLI Infographic](assets/images/platform-ops-python-cli-infographic.png)
 
 ---
 
@@ -49,6 +57,12 @@ make demo          # runs all three tools in dry-run
 `make sync` installs the package in editable mode, so the commands `promotion-bot`, `slo-kit`, and `platform-tenant` are on your `PATH` inside the virtualenv.
 
 Dry-run is the default. `--write` updates a local file. `--open-pr` (promotion only) calls the GitHub API. Neither command talks to a Kubernetes cluster.
+
+Optional local hooks: `pre-commit install` uses [`.pre-commit-config.yaml`](.pre-commit-config.yaml) (Ruff, mypy, gitleaks). The Ruff hook revision matches `ruff==0.16.9` in `pyproject.toml`. CI still runs `make validate` without requiring pre-commit.
+
+The [Dockerfile](Dockerfile) builds a slim image with all three commands installed. The default entrypoint is `promotion-bot`; override it to run `slo-kit` or `platform-tenant` (for example `docker run --rm --entrypoint slo-kit <image> --help`).
+
+For `--open-pr`, set `PROMOTION_GITHUB_TOKEN`, and either pass `--repo owner/name` or set `PROMOTION_GITHUB_REPOSITORY`. Optional: `PROMOTION_GITHUB_API_URL` (defaults to `https://api.github.com`). See [`.env.example`](.env.example).
 
 ---
 
@@ -74,7 +88,7 @@ images:
 5. If you pass a Trivy JSON report, fixable HIGH or CRITICAL findings stop the run.
 6. It prints the new YAML. The file on disk stays unchanged unless you add `--write`.
 
-Optional `--require-signature` runs `cosign verify`. Optional `--open-pr` opens a GitHub pull request. It needs `PROMOTION_GITHUB_TOKEN` (or a GitHub App token) and `--repo owner/name`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
+Optional `--require-signature` runs `cosign verify`. Optional `--open-pr` opens a GitHub pull request with `PROMOTION_GITHUB_TOKEN` (or a GitHub App installation token) and `--repo owner/name` or `PROMOTION_GITHUB_REPOSITORY`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
 
 **Try it.**
 
@@ -90,6 +104,17 @@ Open the values file afterwards. The digest is still the old one. That is dry-ru
 
 To refuse a bad promotion, change `--from-env` to `dev`. The command exits with an error because `dev → prod` skips staging.
 
+To refuse a digest when Trivy reports a fixable HIGH finding:
+
+```bash
+promotion-bot promote \
+  --manifest examples/gitops/values-images.yaml \
+  --service frontend \
+  --digest sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+  --from-env staging --to-env prod \
+  --trivy-json examples/gitops/trivy-blocked.json
+```
+
 **Read next.** `src/platform_ops/promotion/digest.py`, then `policy.py`, then `tests/promotion/test_promotion.py`.
 
 ---
@@ -103,7 +128,7 @@ To refuse a bad promotion, change `--from-env` to `dev`. The command exits with 
 - `objective: 0.999` means 99.9%. The value `1.0` is rejected, because then the error budget is zero.
 - `sli.good` and `sli.total` are PromQL selectors: good events over all events.
 
-**`compile`** prints a `PrometheusRule`. For each SLO it writes a fast window and a slow window together (for example 5 minutes and 1 hour, at 14.4× burn). Both must be bad before the alert fires. That is the multi-window burn-rate pattern from the [Google SRE workbook](https://sre.google/workbook/alerting-on-slos/), the same idea as the GKE catalog (14.4×/1h, 6×/6h, 3×/1d, 1×/3d).
+**`compile`** prints a `PrometheusRule`. For each SLO it writes four multi-window burn pairs by default (5m+1h at 14.4×, 30m+6h at 6×, 2h+1d at 3×, 6h+3d at 1×). Both windows in a pair must burn before the alert fires. That is the multi-window burn-rate pattern from the [Google SRE workbook](https://sre.google/workbook/alerting-on-slos/), the same idea as the GKE catalog.
 
 ```bash
 slo-kit compile --spec examples/slo/boutique.yaml --stdout
@@ -119,8 +144,8 @@ slo-kit report --sli 0.9992 --objective 0.999
 
 | Remaining budget | Band | Meaning |
 | --- | --- | --- |
-| more than 50% | `normal` | Ship as usual |
-| 25–50% | `cautious` | Fewer risky changes |
+| 50% or more | `normal` | Ship as usual |
+| 25% up to 50% | `cautious` | Fewer risky changes |
 | under 25% | `freeze` | Reliability work first |
 | 0% | `sev2` | Budget exhausted |
 
@@ -132,7 +157,7 @@ slo-kit report --sli 0.9992 --objective 0.999
 
 **Problem.** A team asks for a namespace. Writing Namespace, quota, limits, network policy, and an Argo CD project by hand drifts. This CLI renders those objects. It does not apply them. Git stays the source of truth.
 
-**Input.** [`examples/tenant/payments.yaml`](examples/tenant/payments.yaml): name `payments`, team `checkout`, environment `staging`, a quota, and an Argo CD repository URL.
+**Input.** [`examples/tenant/payments.yaml`](examples/tenant/payments.yaml): name `payments`, team `checkout`, environment `staging`, a quota, and an Argo CD repository URL. `spec.argocd.sourcePath` is accepted on the Tenant document for later App-of-Apps wiring; it is **not** written into the rendered `AppProject` today (only `repoURL` and `destServer` are).
 
 **What the code does:**
 
@@ -142,7 +167,7 @@ slo-kit report --sli 0.9992 --objective 0.999
 4. Without `--write`, it only prints.
 
 ```bash
-platform-tenant apply --config examples/tenant/payments.yaml
+platform-tenant render --config examples/tenant/payments.yaml
 ```
 
 `--write --out /tmp/payments` writes `/tmp/payments/tenant.yaml`. You would commit that file. You would not run `kubectl apply` from this tool.

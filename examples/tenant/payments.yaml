@@ -12,4 +12,5 @@ spec:
   argocd:
     repoURL: https://github.com/btilki/boutique-eks-gitops.git
     destServer: https://kubernetes.default.svc
+    # Accepted on the Tenant spec; not emitted into the rendered AppProject yet.
     sourcePath: gitops/apps/payments
