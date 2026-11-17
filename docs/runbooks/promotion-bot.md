@@ -16,4 +16,4 @@ Promotion refused or PR not opened.
 
 ## Rollback
 
-Revert the GitOps PR. Argo CD is still the only deployer. Do not `kubectl set image`.
+Revert the GitOps PR. Argo CD is still the only reconciler. Do not `kubectl set image`.

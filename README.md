@@ -7,7 +7,7 @@
 
 Three small Python command-line tools for GitOps, SRE, and platform work.
 
-They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The Boutique platforms already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository adds the Python CLIs that encode the same GitOps, SLO, and tenant rules those platforms describe.
+They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The Boutique platforms already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository adds complementary Python CLIs inspired by those platforms' GitOps, SLO, and tenant patterns.
 
 Author: [Birol Tilki](https://www.linkedin.com/in/birol-tilki-48731326/)
 
@@ -15,7 +15,7 @@ Author: [Birol Tilki](https://www.linkedin.com/in/birol-tilki-48731326/)
 | --- | --- |
 | Language | Python 3.12+ |
 | Tools | `promotion-bot`, `slo-kit`, `platform-tenant` |
-| Default | Dry-run. Nothing on disk changes unless you pass `--write` |
+| Default | Dry-run. Local disk unchanged unless `--write`; `--open-pr` opens a GitHub PR only |
 | Does not | `kubectl apply`, create cloud networks, or replace Argo CD |
 | Check | `make sync` → `make validate` → `make demo` |
 
@@ -40,7 +40,7 @@ Similar tools already exist (Argo CD Image Updater, Renovate, Sloth, Crossplane)
 
 ## Portfolio overview
 
-The infographic is a high-level GitOps poster (automation, observability, multi-environment). It does not run `kubectl apply` or call Argo CD from Python. **Git PR → Argo CD** means merge GitOps; Argo CD reconciles. Commands are in sections 1–3 (`promotion-bot`, `slo-kit`, `platform-tenant`), [Non-goals](#non-goals), and [docs](docs).
+The infographic is a GitOps poster for **`promotion-bot`**, **`slo-kit`**, and **`platform-tenant`**. It does not run `kubectl apply` or call Argo CD from Python. **Git PR → Argo CD** means merge GitOps; Argo CD reconciles. Commands are in sections 1–3 (`promotion-bot`, `slo-kit`, `platform-tenant`), [Non-goals](#non-goals), and [docs](docs).
 
 ![Platform Ops Python — portfolio infographic](assets/images/platform-ops-python-cli-infographic.png)
 
@@ -58,7 +58,7 @@ You need Python 3.12 or newer and `make`.
 git clone https://github.com/btilki/platform-ops-python.git
 cd platform-ops-python
 make sync          # creates .venv and installs the three commands
-source .venv/bin/activate
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 make validate      # ruff check, ruff format --check, mypy, pytest
 make demo          # runs all three tools in dry-run
 ```
@@ -96,7 +96,7 @@ For `--open-pr`, set `PROMOTION_GITHUB_TOKEN`, and either pass `--repo owner/nam
 
 ## 1. promotion-bot — change one image digest in Git
 
-**Problem.** In [boutique-gke-sre](https://github.com/btilki/boutique-gke-sre), images are pinned by digest (`sha256:...`), not by a floating tag such as `:latest`. The [`manifest-digest-pr`](https://github.com/btilki/boutique-gke-sre/blob/main/.github/workflows/manifest-digest-pr.yml) workflow updates `values-images.yaml` with an inline Python block today. `promotion-bot` is that logic as a maintainable CLI (digest rules, Trivy gate, optional cosign, optional `--open-pr`). Argo CD is still the only deployer.
+**Problem.** In [boutique-gke-sre](https://github.com/btilki/boutique-gke-sre), images are pinned by digest (`sha256:...`), not by a floating tag such as `:latest`. The [`manifest-digest-pr`](https://github.com/btilki/boutique-gke-sre/blob/main/.github/workflows/manifest-digest-pr.yml) workflow updates `values-images.yaml` with an inline Python block today. `promotion-bot` is that logic as a maintainable CLI (digest rules, Trivy gate, optional cosign, optional `--open-pr`). Argo CD is still the only reconciler that applies cluster state from Git.
 
 **Input.** [`examples/gitops/values-images.yaml`](examples/gitops/values-images.yaml):
 

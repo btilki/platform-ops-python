@@ -2,14 +2,14 @@
 
 ## Unreleased
 
-- Portfolio infographic v3: three named CLIs, reconcile wording, Promote-in-Git footer; refresh `assets/images/README.md`
-- README CI sentence matches `make validate` (Ruff check and format); infographic caption names the three CLIs
-- Portfolio infographic v2 (Git PR → Argo CD, SAFE & RELIABLE footer); refresh `assets/images/README.md`
-- Rename README section to **Portfolio overview**; map infographic pillars to real CLIs in `assets/images/README.md`
-- Replace CLI infographic art; document accurate capabilities vs poster copy
-- Link boutique-gke-sre `manifest-digest-pr` workflow; document `--path-in-repo` and promotion exit codes
-- README summary table includes LimitRange; `make validate` documents Ruff format check
-- ADR 0003 band label `sev2`; promotion runbook env vars; CONTRIBUTING gitleaks note
+## 0.2.1 — 2026-11-17
+
+- Portfolio infographic v3: three CLI columns, Promote-in-Git footer, Argo CD reconciler wording
+- Documentation audit follow-through: Portfolio overview, `--path-in-repo`, promotion exit codes, `assets/images/README.md` catalog
+- Link boutique-gke-sre `manifest-digest-pr` workflow; README CI matches full `make validate` (Ruff format check)
+- README summary table includes LimitRange; unify reconciler wording; dry-run table notes `--open-pr`
+- ADR 0003 `sev2` band label; promotion runbook env vars; CONTRIBUTING gitleaks note
+- Windows venv activation note; PNG optimize; SECURITY mentions optional repository env
 
 ## 0.2.0 — 2026-11-17
 

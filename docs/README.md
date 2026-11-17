@@ -17,7 +17,7 @@ All three CLIs map `platform_ops.exceptions` types to stable exit codes (`src/pl
 | --- | --- | --- |
 | 0 | Success | Dry-run completed, or write/PR succeeded |
 | 1 | General error | Unexpected `PlatformOpsError` base case |
-| 2 | Validation | Bad flags, missing file, invalid YAML shape, invalid digest, `--require-signature` without `--image` |
+| 2 | Validation | Bad flags, missing file, invalid YAML shape, invalid digest, `--require-signature` without `--image`, missing `--repo` / `PROMOTION_GITHUB_REPOSITORY` for `--open-pr` |
 | 3 | Policy | Adjacent promotion refused, Trivy/cosign verify failed, reserved tenant name |
 | 4 | Integration | Missing `cosign`, cosign verify timeout, missing `PROMOTION_GITHUB_TOKEN` for `--open-pr`, upstream API failure |
 
