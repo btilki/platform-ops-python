@@ -9,4 +9,16 @@
 | [runbooks/slo-kit.md](runbooks/slo-kit.md) | Compile failures and error-budget math |
 | [runbooks/platform-tenant.md](runbooks/platform-tenant.md) | Tenant name policy and render output |
 
+## Exit codes
+
+All three CLIs map `platform_ops.exceptions` types to stable exit codes (`src/platform_ops/exceptions.py`):
+
+| Code | Meaning | Typical cause |
+| --- | --- | --- |
+| 0 | Success | Dry-run completed, or write/PR succeeded |
+| 1 | General error | Unexpected `PlatformOpsError` base case |
+| 2 | Validation | Bad flags, missing file, invalid YAML shape, invalid digest |
+| 3 | Policy | Adjacent promotion refused, Trivy/cosign verify failed, reserved tenant name |
+| 4 | Integration | Missing `cosign`, GitHub token for `--open-pr`, upstream API failure |
+
 Start with the root [README](../README.md) for install and try-it commands.

@@ -1,5 +1,10 @@
 # platform-ops-python
 
+[![Python](https://img.shields.io/badge/python-%3E%3D3.12-blue.svg)](https://www.python.org/)
+[![CI](https://github.com/btilki/platform-ops-python/actions/workflows/ci.yml/badge.svg)](https://github.com/btilki/platform-ops-python/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Maturity](https://img.shields.io/badge/maturity-alpha-lightgrey.svg)](CHANGELOG.md)
+
 Three small Python command-line tools for GitOps, SRE, and platform work.
 
 They do **not** deploy anything. They check inputs and print (or write) YAML that Git and Argo CD would use later. The Boutique platforms already show Terraform, GitOps, and Kubernetes configuration on [EKS](https://github.com/btilki/boutique-eks-gitops), [AKS](https://github.com/btilki/boutique-aks-devsecops), and [GKE](https://github.com/btilki/boutique-gke-sre). This repository adds the Python CLIs that encode the same GitOps, SLO, and tenant rules those platforms describe.
@@ -39,6 +44,8 @@ Use this map for the three CLIs, how they fit GitOps and SRE workflows, and wher
 
 ![Platform Ops Python — CLI Infographic](assets/images/platform-ops-python-cli-infographic.png)
 
+Diagram catalog: [`assets/images/README.md`](assets/images/README.md).
+
 ---
 
 ## Install and run
@@ -56,11 +63,30 @@ make demo          # runs all three tools in dry-run
 
 `make sync` installs the package in editable mode, so the commands `promotion-bot`, `slo-kit`, and `platform-tenant` are on your `PATH` inside the virtualenv.
 
-Dry-run is the default. `--write` updates a local file. `--open-pr` (promotion only) calls the GitHub API. Neither command talks to a Kubernetes cluster.
+Dry-run is the default. `--write` updates a local file. `--open-pr` (promotion only) calls the GitHub API. None of the commands talk to a Kubernetes cluster.
 
-Optional local hooks: `pre-commit install` uses [`.pre-commit-config.yaml`](.pre-commit-config.yaml) (Ruff, mypy, gitleaks). The Ruff hook revision matches `ruff==0.16.9` in `pyproject.toml`. CI still runs `make validate` without requiring pre-commit.
+Optional local hooks: `pre-commit install` uses [`.pre-commit-config.yaml`](.pre-commit-config.yaml) (Ruff, mypy, gitleaks). The Ruff hook revision matches `ruff==0.16.9` in `pyproject.toml`.
 
-The [Dockerfile](Dockerfile) builds a slim image with all three commands installed. The default entrypoint is `promotion-bot`; override it to run `slo-kit` or `platform-tenant` (for example `docker run --rm --entrypoint slo-kit <image> --help`).
+GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs on push and pull request to `main`: `pip install -e ".[dev]"`, then the same Ruff, mypy, and pytest steps as `make validate`. You do not need pre-commit for CI to pass.
+
+The [Dockerfile](Dockerfile) builds a slim image with all three commands installed. The default entrypoint is `promotion-bot`.
+
+```bash
+docker build -t platform-ops-python:local .
+docker run --rm platform-ops-python:local promote --help
+docker run --rm --entrypoint slo-kit platform-ops-python:local --help
+docker run --rm --entrypoint platform-tenant platform-ops-python:local --help
+```
+
+Mount a workspace when you want local files on the path, for example:
+
+```bash
+docker run --rm -v "$PWD:/work" -w /work platform-ops-python:local \
+  promote --manifest examples/gitops/values-images.yaml \
+  --service frontend \
+  --digest sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+  --from-env staging --to-env prod
+```
 
 For `--open-pr`, set `PROMOTION_GITHUB_TOKEN`, and either pass `--repo owner/name` or set `PROMOTION_GITHUB_REPOSITORY`. Optional: `PROMOTION_GITHUB_API_URL` (defaults to `https://api.github.com`). See [`.env.example`](.env.example).
 
@@ -88,7 +114,9 @@ images:
 5. If you pass a Trivy JSON report, fixable HIGH or CRITICAL findings stop the run.
 6. It prints the new YAML. The file on disk stays unchanged unless you add `--write`.
 
-Optional `--require-signature` runs `cosign verify`. Optional `--open-pr` opens a GitHub pull request with `PROMOTION_GITHUB_TOKEN` (or a GitHub App installation token) and `--repo owner/name` or `PROMOTION_GITHUB_REPOSITORY`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
+Optional `--require-signature` runs `cosign verify <image>@<digest>`. You need `cosign` on `PATH`, `--image` set to the image repository (not the digest alone), and whatever trust material your registry expects (keys, Fulcio/Rekor, or policy files on the cosign default path). A verify failure is exit code 3; a missing `cosign` binary is exit code 4.
+
+Optional `--open-pr` opens a GitHub pull request with `PROMOTION_GITHUB_TOKEN` (or a GitHub App installation token) and `--repo owner/name` or `PROMOTION_GITHUB_REPOSITORY`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
 
 **Try it.**
 
@@ -140,7 +168,7 @@ slo-kit compile --spec examples/slo/boutique.yaml --stdout
 slo-kit report --sli 0.9992 --objective 0.999
 ```
 
-`0.9992` means 99.92% of requests succeeded. The objective is 99.9%, so the allowed failure is 0.1%. The code computes how much of that allowance is already used, then prints a band. The bands match the [GKE error-budget policy](https://github.com/btilki/boutique-gke-sre/blob/main/docs/sre/error-budget-policy.md):
+`0.9992` means 99.92% of requests succeeded. The objective is 99.9%, so the allowed failure is 0.1%. The code computes how much of that allowance is already used, then prints a band. The bands follow the same thresholds as the [GKE error-budget policy](https://github.com/btilki/boutique-gke-sre/blob/main/docs/sre/error-budget-policy.md); at exactly 50% remaining this CLI reports `normal`, while the GKE doc wording uses **>50%** for that band.
 
 | Remaining budget | Band | Meaning |
 | --- | --- | --- |

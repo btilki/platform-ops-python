@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Document Docker build/run examples and GitHub Actions CI in the README
+- Add `assets/images/README.md` diagram catalog
+- Add README badges, exit-code table in `docs/README.md`, cosign prerequisites
+
+## 0.2.0 — 2026-11-17
+
 - Remove the deleted playbook link; keep EKS, AKS, and GKE references
 - Align promotion token docs with `PROMOTION_GITHUB_TOKEN` / `PROMOTION_GITHUB_REPOSITORY` / `PROMOTION_GITHUB_API_URL`
 - Fix slo-kit remaining-budget formula in the runbook
