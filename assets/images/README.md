@@ -2,20 +2,17 @@
 
 | File | What it shows |
 | --- | --- |
-| [platform-ops-python-cli-infographic.png](platform-ops-python-cli-infographic.png) | Portfolio poster: Git PR → Argo CD, observability and multi-env pillars, EKS·AKS·GKE, safe-change footer |
+| [platform-ops-python-cli-infographic.png](platform-ops-python-cli-infographic.png) | Three CLIs (`promotion-bot`, `slo-kit`, `platform-tenant`), GitOps reconcile flow, EKS·AKS·GKE siblings, safe-change footer |
 
-## Infographic layout (2026-11, v2)
+## Infographic layout (2026-11, v3)
 
-- **Header:** `platform-ops-python`, Python toolkit subtitle, pill **DevOps • SRE • Platform Engineering**, author signature.
-- **Automation:** configs → GitHub PR → **Git PR → Argo CD** → platform changes via GitOps. Maps to **`promotion-bot`** (digest pin, `--open-pr`) and **`platform-tenant render`** (tenant YAML to Git).
-- **Observability:** SLO-style monitor / analyze / improve motif. Maps to **`slo-kit compile`** (`PrometheusRule` YAML) and **`slo-kit report`** (error-budget band)—not live dashboards or Prometheus queries from this repo.
-- **Multi-environment:** dev → staging → prod; logos **EKS**, **AKS**, **GKE** (Boutique sibling repos); adjacent promotion path in code (`dev → staging → prod`).
-- **Footer (SAFE & RELIABLE):** run tests → build and scan → no critical issues → **Deploy** (end-to-end platform flow) → keep users happy. **Deploy here means merge GitOps and let Argo CD reconcile**—these CLIs do not deploy or `kubectl apply`.
-
-**Outside these CLIs:** Argo CD API calls, `kubectl apply`, and cluster sync driven by Python.
+- **Header:** `platform-ops-python`, subtitle, pill **DevOps • SRE • Platform Engineering** and **dry-run by default**, author signature.
+- **`promotion-bot`:** digest pin → GitHub PR → Argo CD reconciles; Trivy/cosign/`--open-pr` bullets as on the art.
+- **`slo-kit`:** SLO YAML → compile `PrometheusRule` → error-budget report; no live Prometheus query.
+- **`platform-tenant`:** Tenant YAML → five objects → Git → Argo CD reconciles; no `kubectl apply`.
+- **Boutique strip:** EKS, AKS, GKE sibling repos (not this repository).
+- **Footer:** `make validate` → build & scan → no critical issues → Promote digest in Git → Argo CD reconciles; **GitOps only**. Repo URL and **Argo CD is the reconciler**.
 
 The root [README](../../README.md) has commands, flags, exit codes, and examples.
 
 Referenced from the root README under **Portfolio overview**.
-
-**Art check:** If the Automation “Important” callout still reads **configuraations**, fix the spelling in your design file and re-export.

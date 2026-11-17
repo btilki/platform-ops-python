@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Portfolio infographic v3: three named CLIs, reconcile wording, Promote-in-Git footer; refresh `assets/images/README.md`
+- README CI sentence matches `make validate` (Ruff check and format); infographic caption names the three CLIs
 - Portfolio infographic v2 (Git PR → Argo CD, SAFE & RELIABLE footer); refresh `assets/images/README.md`
 - Rename README section to **Portfolio overview**; map infographic pillars to real CLIs in `assets/images/README.md`
 - Replace CLI infographic art; document accurate capabilities vs poster copy

@@ -40,11 +40,13 @@ Similar tools already exist (Argo CD Image Updater, Renovate, Sloth, Crossplane)
 
 ## Portfolio overview
 
-The infographic summarizes the three CLIs and GitOps → Argo CD flow. It does not run `kubectl apply` or call Argo CD from Python. Commands and behavior are in sections 1–3, [Non-goals](#non-goals), and [docs](docs).
+The infographic is a high-level GitOps poster (automation, observability, multi-environment). It does not run `kubectl apply` or call Argo CD from Python. **Git PR → Argo CD** means merge GitOps; Argo CD reconciles. Commands are in sections 1–3 (`promotion-bot`, `slo-kit`, `platform-tenant`), [Non-goals](#non-goals), and [docs](docs).
 
 ![Platform Ops Python — portfolio infographic](assets/images/platform-ops-python-cli-infographic.png)
 
-Diagram catalog and how each visual pillar maps to real commands: [`assets/images/README.md`](assets/images/README.md).
+*`promotion-bot` · `slo-kit` · `platform-tenant` — digest PRs, PrometheusRule YAML, tenant render. Footer **Promote in Git → Argo CD reconciles**; these CLIs do not deploy.*
+
+Diagram catalog: [`assets/images/README.md`](assets/images/README.md).
 
 ---
 
@@ -67,7 +69,7 @@ Dry-run is the default. `--write` updates a local file. `--open-pr` (promotion o
 
 Optional local hooks: `pre-commit install` uses [`.pre-commit-config.yaml`](.pre-commit-config.yaml) (Ruff, mypy, gitleaks). The Ruff hook revision matches `ruff==0.16.9` in `pyproject.toml`.
 
-GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs on push and pull request to `main`: `pip install -e ".[dev]"`, then the same Ruff, mypy, and pytest steps as `make validate`. You do not need pre-commit for CI to pass.
+GitHub Actions ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs on push and pull request to `main`: `pip install -e ".[dev]"`, then the same Ruff check, Ruff format check, mypy, and pytest steps as `make validate`. You do not need pre-commit for CI to pass.
 
 The [Dockerfile](Dockerfile) builds a slim image with all three commands installed. The default entrypoint is `promotion-bot`.
 
