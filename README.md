@@ -114,7 +114,7 @@ images:
 5. If you pass a Trivy JSON report, fixable HIGH or CRITICAL findings stop the run.
 6. It prints the new YAML. The file on disk stays unchanged unless you add `--write`.
 
-Optional `--require-signature` runs `cosign verify <image>@<digest>`. You need `cosign` on `PATH`, `--image` set to the image repository (not the digest alone), and whatever trust material your registry expects (keys, Fulcio/Rekor, or policy files on the cosign default path). A verify failure is exit code 3; a missing `cosign` binary is exit code 4.
+Optional `--require-signature` runs `cosign verify <image>@<digest>`. You need `cosign` on `PATH`, `--image` set to the image repository (not the digest alone), and whatever trust material your registry expects (keys, Fulcio/Rekor, or policy files on the cosign default path). Omitting `--image` with `--require-signature` is exit code 2. A verify failure is exit code 3; a missing `cosign` binary or verify timeout is exit code 4.
 
 Optional `--open-pr` opens a GitHub pull request with `PROMOTION_GITHUB_TOKEN` (or a GitHub App installation token) and `--repo owner/name` or `PROMOTION_GITHUB_REPOSITORY`. See [docs/runbooks/promotion-bot.md](docs/runbooks/promotion-bot.md).
 
@@ -242,4 +242,4 @@ A useful reading order, one tool at a time:
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE).
+Apache License 2.0. See [LICENSE](LICENSE). Security reporting: [SECURITY.md](SECURITY.md).
